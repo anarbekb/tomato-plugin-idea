@@ -29,10 +29,9 @@
       appear here because they are defined by action-id in the resource-bundle.
     -->
         <action id="org.intellij.sdk.action.PopupDialogAction" class="ru.balmukanov.tomato.action.PopupDialogAction"
-                text="Action Basics Plugin: Pop Dialog Action" description="SDK action example"
-                icon="SdkIcons.Sdk_default_icon">
+                text="Action Tomato" description="SDK action example">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
-            <override-text place="MainMenu" text="Pop Dialog Action"/>
+            <override-text place="tomato" text="Tomato"/>
             <keyboard-shortcut first-keystroke="control alt A" second-keystroke="C" keymap="$default"/>
             <mouse-shortcut keystroke="control button3 doubleClick" keymap="$default"/>
         </action>
@@ -46,12 +45,10 @@
           It declares one action in the group.
         -->
         <group id="org.intellij.sdk.action.GroupedActions"
-               text="Static Grouped Actions" description="SDK statically grouped action example"
-               popup="true" icon="SdkIcons.Sdk_default_icon">
+               text="Static Grouped Actions" description="SDK statically grouped action example">
             <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="org.intellij.sdk.action.PopupDialogAction"/>
             <action id="org.intellij.sdk.action.GroupPopDialogAction" class="ru.balmukanov.tomato.action.PopupDialogAction"
-                    text="A Group Action" description="SDK static grouped action example"
-                    icon="SdkIcons.Sdk_default_icon">
+                    text="Group Action Tomato" description="SDK static grouped action example" >
             </action>
         </group>
         <!--
@@ -64,16 +61,14 @@
                class="ru.balmukanov.tomato.action.CustomDefaultActionGroup"
                popup="true">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-            <action id="org.intellij.sdk.action.CustomGroupedAction" class="ru.balmukanov.tomato.action.PopupDialogAction"
-                    icon="SdkIcons.Sdk_default_icon"/>
+            <action id="org.intellij.sdk.action.CustomGroupedAction" class="ru.balmukanov.tomato.action.PopupDialogAction" />
         </group>
         <!--
           DynamicActionGroup demonstrates declaring an action group without a static action declaration.
           An action is added to the group programmatically in the DynamicActionGroup implementation.
         -->
         <group id="org.intellij.sdk.action.DynamicActionGroup" class="ru.balmukanov.tomato.action.DynamicActionGroup"
-               popup="true" text="Dynamically Grouped Actions" description="SDK dynamically grouped action example"
-               icon="SdkIcons.Sdk_default_icon">
+               popup="true" text="Dynamically Grouped Actions Tomato" description="SDK dynamically grouped action example">
             <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="org.intellij.sdk.action.GroupedActions"/>
         </group>
     </actions>
