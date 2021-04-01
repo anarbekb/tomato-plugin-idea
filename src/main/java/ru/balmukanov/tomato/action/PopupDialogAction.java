@@ -1,15 +1,16 @@
 package ru.balmukanov.tomato.action;
 
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Action class to demonstrate how to interact with the IntelliJ Platform.
@@ -30,19 +31,6 @@ public class PopupDialogAction extends AnAction {
     }
 
     /**
-     * This constructor is used to support dynamically added menu actions.
-     * It sets the text, description to be displayed for the menu item.
-     * Otherwise, the default AnAction constructor is used by the IntelliJ Platform.
-     *
-     * @param text        The text to be displayed as a menu item.
-     * @param description The description of the menu item.
-     * @param icon        The icon to be used with the menu item.
-     */
-    public PopupDialogAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
-        super(text, description, icon);
-    }
-
-    /**
      * Gives the user feedback when the dynamic action menu is chosen.
      * Pops a simple message dialog. See the psi_demo plugin for an
      * example of how to use {@link AnActionEvent} to access data.
@@ -51,16 +39,31 @@ public class PopupDialogAction extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        // Using the event, create and show a dialog
-        Project currentProject = event.getProject();
-        StringBuilder dlgMsg = new StringBuilder(event.getPresentation().getText() + " Selected!");
-        String dlgTitle = event.getPresentation().getDescription();
-        // If an element is selected in the editor, add info about it.
-        Navigatable nav = event.getData(CommonDataKeys.NAVIGATABLE);
-        if (nav != null) {
-            dlgMsg.append(String.format("\nSelected Element: %s", nav.toString()));
-        }
-        Messages.showMessageDialog(currentProject, dlgMsg.toString(), dlgTitle, Messages.getInformationIcon());
+        final Notification notification = new Notification("ProjectOpenNotification", "Started tomato",
+                "Started tomato(50 min)", NotificationType.INFORMATION);
+        notification.notify(event.getProject());
+
+        ProgressManager.getInstance().run(new Task.Backgroundable(event.getProject(), "Tomato") {
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+
+                try {
+                    progressIndicator.setIndeterminate(false);
+                    for (int i = 1; i <= 3; i++) {
+                        TimeUnit.MINUTES.sleep(1);
+
+                        progressIndicator.setFraction(i);
+                        progressIndicator.setText(String.format("Tomato: %d min passed", i));
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                final Notification notificationComplete = new Notification("ProjectOpenNotification", "Hey you!",
+                        "Get some rest", NotificationType.WARNING);
+                notification.setImportant(true);
+                notificationComplete.notify(event.getProject());
+            }
+        });
     }
 
     /**
